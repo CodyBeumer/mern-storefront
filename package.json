@@ -1,0 +1,29 @@
+{
+  "name": "mern-storefront",
+  "version": "1.0.0",
+  "description": "Storefront application using MERN stack",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodyBeumer/mern-storefront.git"
+  },
+  "author": "Cody Beumer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CodyBeumer/mern-storefront/issues"
+  },
+  "homepage": "https://github.com/CodyBeumer/mern-storefront#readme",
+  "devDependencies": {
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.4"
+  }
+}
