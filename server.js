@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 const examplesRouter = require('./routes/example');
-const inventoryRouter = require('./routes/inventory')
+const inventoryRouter = require('./routes/inventory');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -11,7 +11,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 app.use('/examples', examplesRouter);
-app.use('/inventory', inventoryRouter)
+app.use('/inventory', inventoryRouter);
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri);
