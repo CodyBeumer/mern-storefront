@@ -13,7 +13,7 @@ const SiteNavBar = () => {
             {
                 isAuthenticated ?
                 <NavDropdown title={user.name}>
-                    <NavDropdown.Item href='#account-details'>Account Details</NavDropdown.Item>
+                    <NavDropdown.Item>Account Details</NavDropdown.Item>
                     <NavDropdown.Item onClick={() => { logout() }}>Sign Out</NavDropdown.Item>
                 </NavDropdown> :
                 <a onClick={() => { loginWithRedirect() }}>Sign In</a>
