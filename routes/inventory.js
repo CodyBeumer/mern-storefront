@@ -10,10 +10,12 @@ router.route('/get').get((req, res) => {
 router.route('/put').put((req, res) => {
     const name = req.body.name;
     const description = req.body.description;
-    const price = req.body.price;
+    const price = parseFloat(req.body.price);
     const category = req.body.category;
-    const quantity = req.body.quantity;
+    const quantity = parseInt(req.body.quantity);
     const tags = req.body.tags || [];
+
+    console.log(req);
 
     const newInventory = new Inventory({
         name,

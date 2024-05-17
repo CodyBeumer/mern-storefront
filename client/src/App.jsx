@@ -1,13 +1,28 @@
-import './App.css'
-import PageRoutes from './PageRoutes';
 import SiteNavBar from './components/SiteNavBar';
+import { useState } from 'react';
+import AccountDetails from './pages/AccountDetails'
+import Inventory from './pages/Inventory';
+import ManageInventory from './pages/ManageInventory';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 
 function App() {
+  const [cartItems, setCartItems] = useState([]);
+
+  const addItemToCart = (item) => {
+    setCartItems([...cartItems, item]);
+  };
+
   return (
     <div id='app'>
-        <SiteNavBar />
-        <PageRoutes />
+        <SiteNavBar cartItems={cartItems} />
+        <BrowserRouter>
+            <Routes>
+              <Route path='/' element={<Inventory addItemToCart={addItemToCart} />} />
+                <Route path='/account-details' element={<AccountDetails />} />
+                <Route path='/manage-inventory' element={<ManageInventory />} />
+            </Routes>
+        </BrowserRouter>
     </div>
 
   )

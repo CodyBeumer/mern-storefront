@@ -3,56 +3,41 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import SiteNavBar from '../components/SiteNavBar';
 
-const items = [
-    {
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLhKWHWd7ugKuKWvovXiyHMYce77dw98Fan7On7IQarNS-AGHkVkMZNBz9hsNClanpeyM&usqp=CAU",
-        name: "Men's Shirt",
-        description: '',
-        price: 25.99,
-        quantity: 30
-    },
-    {
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLhKWHWd7ugKuKWvovXiyHMYce77dw98Fan7On7IQarNS-AGHkVkMZNBz9hsNClanpeyM&usqp=CAU",
-        name: "Men's Shirt",
-        description: '',
-        price: 26.99,
-        quantity: 30
-    },
-    {
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLhKWHWd7ugKuKWvovXiyHMYce77dw98Fan7On7IQarNS-AGHkVkMZNBz9hsNClanpeyM&usqp=CAU",
-        name: "Men's Shirt",
-        description: '',
-        price: 22.99,
-        quantity: 30
-    },
-    {
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLhKWHWd7ugKuKWvovXiyHMYce77dw98Fan7On7IQarNS-AGHkVkMZNBz9hsNClanpeyM&usqp=CAU",
-        name: "Men's Shirt",
-        description: '',
-        price: 23.99,
-        quantity: 30
+const Inventory = ({ addItemToCart }) => {
+    const [items, setItems] = useState([]);
+    const [gridItems, setGridItems] = useState([]);
+    const [displayType, setDisplayType] = useState('grid');
+
+    const mapItemsToGrid = (data) => {
+        const arr = [];
+        const itemsCopy = data.slice();
+        while (itemsCopy.length > 0) {
+            const slicedArr = itemsCopy.splice(0, 3);
+    
+            while(slicedArr.length < 3) {
+                slicedArr.push(null);
+            }
+            
+            arr.push(slicedArr);
+        } 
+        return arr;
     }
-]
 
-const mapItemsToGrid = () => {
-    const arr = [];
-    const itemsCopy = [...items];
-    while (itemsCopy.length > 0) {
-        const slicedArr = itemsCopy.splice(0, 3);
+    useEffect(() => {
+        axios.get('http://localhost:5000/inventory/get')
+        .then(res => {
+            setItems(res.data);
+            setGridItems(mapItemsToGrid(res.data))
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }, []);
 
-        while(slicedArr.length < 3) {
-            slicedArr.push(null);
-        }
-        
-        arr.push(slicedArr);
-    } 
-    return arr;
-}
-
-const gridItems = mapItemsToGrid(items);
-
-const Inventory = () => {
     return (
         <Container className='mt-5'>
                 {
@@ -68,9 +53,9 @@ const Inventory = () => {
                                                 <Card className='p-5 mb-3'>
                                                     <Card.Img className='mb-2' variant='top' src={item.image}></Card.Img>
                                                     <Card.Title>{item.name}</Card.Title>
-                                                    <Card.Subtitle>${item.price}</Card.Subtitle>
-                                                    <Card.Body>{item.decription}</Card.Body>
-                                                    <Button>Add To Cart</Button>
+                                                    <Card.Subtitle>${item.price.$numberDecimal}</Card.Subtitle>
+                                                    <Card.Body>{item.description}</Card.Body>
+                                                    <Button onClick={() => addItemToCart(item)}>Add To Cart</Button>
                                                 </Card>
                                             </Col>)
                                         }

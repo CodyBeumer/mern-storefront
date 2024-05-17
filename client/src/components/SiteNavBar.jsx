@@ -4,15 +4,13 @@ import Container from "react-bootstrap/Container";
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Nav from 'react-bootstrap/Nav';
 
-const SiteNavBar = () => {
+const SiteNavBar = ({ cartItems }) => {
     const { user, isAuthenticated, logout, loginWithRedirect } = useAuth0();
-
     return (
     <Navbar className="bg-body-tertiary w-100 navbar navbar-expand navbar-light">
         <Container className='w-100 px-0'>
             <Navbar.Brand href='/' className='navbar-brand'>MERN Storefront</Navbar.Brand>
             <Nav>
-                <Nav.Link href='/inventory'>Inventory</Nav.Link>
             </Nav>
             <Container className='d-flex justify-content-end'>
                 {
@@ -20,6 +18,7 @@ const SiteNavBar = () => {
                     <>
                         <NavDropdown title={user.name}>
                             <NavDropdown.Item href='/account-details'>Account Details</NavDropdown.Item>
+                            <NavDropdown.Item href='/manage-inventory'>Manage Inventory</NavDropdown.Item>
                             <NavDropdown.Item onClick={() => { logout() }}>Sign Out</NavDropdown.Item>
                         </NavDropdown>
                     </> :
@@ -30,8 +29,7 @@ const SiteNavBar = () => {
                     </div>
                 }
                 <div className='mx-3'>
-                    <i className='fa fa-xl fa-cart-shopping'></i>
-                    <div></div>
+                    <i className='fa fa-xl fa-cart-shopping'><span>{cartItems.length}</span></i>
                 </div>
             </Container>
 
