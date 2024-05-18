@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Nav from 'react-bootstrap/Nav';
 
-const SiteNavBar = ({ cartItems }) => {
+const SiteNavBar = ({ cartItems, setCartVisible }) => {
     const { user, isAuthenticated, logout, loginWithRedirect } = useAuth0();
     return (
     <Navbar className="bg-body-tertiary w-100 navbar navbar-expand navbar-light">
@@ -29,7 +29,7 @@ const SiteNavBar = ({ cartItems }) => {
                     </div>
                 }
                 <div className='mx-3'>
-                    <i className='fa fa-xl fa-cart-shopping'><span>{cartItems.length}</span></i>
+                    <i className='fa fa-xl fa-cart-shopping' onClick={() => { setCartVisible(true) }}><span>{cartItems.length}</span></i>
                 </div>
             </Container>
 
