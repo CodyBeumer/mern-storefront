@@ -1,4 +1,7 @@
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 
 const CartOffcanvas = ({ cartItems, cartVisible, setCartVisible }) => {
     return (
@@ -8,13 +11,21 @@ const CartOffcanvas = ({ cartItems, cartVisible, setCartVisible }) => {
                 <Offcanvas.Title>Cart Items</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-                    <ul>
+                    <Container>
                         {
                             cartItems.map((item, i) => {
-                                return <li key={i}>{item.name}</li>
+                                return (
+                                <Card key={i} className='p-5 mb-3'>
+                                    <Card.Img></Card.Img>
+                                    <Card.Title>{item.name}</Card.Title>
+                                    <Card.Subtitle>${item.price.$numberDecimal}</Card.Subtitle>
+                                    <Card.Body>{item.description}</Card.Body>
+                                    <Button>Remove From Cart</Button>
+                                </Card>
+                                )
                             })
                         }
-                    </ul>
+                    </Container>
             </Offcanvas.Body>
         </Offcanvas>
         </>

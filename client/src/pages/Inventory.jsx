@@ -33,7 +33,7 @@ const Inventory = ({ addItemToCart }) => {
             setGridItems(mapItemsToGrid(res.data))
         })
         .catch(err => {
-            console.log(err);
+            console.error(err);
         });
     }, []);
 

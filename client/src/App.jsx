@@ -12,12 +12,14 @@ function App() {
   const [cartVisible, setCartVisible] = useState(false);
 
   const addItemToCart = (item) => {
+    setCartItems([...cartItems, item]);
     cartItems.push(item);
-    setCartItems(cartItems);
     sessionStorage.setItem('user-cart', JSON.stringify(cartItems));
-    console.log(cartItems);
-    console.log(sessionStorage.getItem('user-cart'));
   };
+
+  const removeItemFromCart = (item) => {
+    
+  }
 
   useEffect(() => {
     const sessionCartItems = sessionStorage.getItem('user-cart');

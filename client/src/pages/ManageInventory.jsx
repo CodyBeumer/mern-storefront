@@ -1,78 +1,106 @@
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Table from 'react-bootstrap/Table';
+import Modal from 'react-bootstrap/Modal';
 
 const ManageInventory = () => {
-    const [input, setInput] = useState({
-        name: "",
-        description: "",
-        price: 0,
-        category: '',
-        quantity: 0,
-        tags: []
-    });
+    const [items, setItems] = useState([]);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [currentEditItem, setCurrentEditItem] = useState();
 
-    const handleInputChange = (e) => {
-        input[e.target.name] = e.target.value;        
-        setInput(input);
+    useEffect(() => {
+        axios.get('http://localhost:5000/inventory/get')
+        .then(res => {
+            setItems(res.data);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    }, []);
+
+    const handleEditItem = (item) => {
+        setCurrentEditItem(item);
+        setShowEditModal(true);
     }
 
-    const handleSubmit = () => {
-        axios.put('http://localhost:5000/inventory/put', {
-            name: input.name,
-            description: input.description,
-            price: input.price,
-            category: input.category,
-            quantity: input.quantity,
-            tags: input.tags
-        })
-        .then(() => {
-            setInput({
-                name: "",
-                description: "",
-                price: 0,
-                category: "",
-                quantity: 0,
-                tags: []
-            })
-        })
-        .catch(err => console.log)
+    const handleEditCurrentItem = () => {
+        setShowEditModal(false);
     }
 
-    return (  
-        <Container className='w-50'>
-            <Container className='d-flex justify-content-end mt-5 mb-5'>
-                <Button className='justify-ccontent-end' onClick={handleSubmit}><i className='fa fa-plus'></i> Add Inventory</Button>
+    return (
+        <>
+        <Container className='w-50 mt-5'>
+            <Container className='justify-content-end'>
+                <Button><i className='fa fa-plus'></i>Add Inventory</Button>
             </Container>
-            <Form>
-                <Form.Group className='mb-3'>
-                    <Form.Label>Name:</Form.Label>
-                    <Form.Control type='text' name='name' onChange={handleInputChange}></Form.Control>
-                </Form.Group>
-                <Form.Group className='mb-3'>
-                    <Form.Label>Description:</Form.Label>
-                    <Form.Control type='text' name='description' onChange={handleInputChange}></Form.Control>
-                </Form.Group>
-                <Form.Group className='mb-3'>
-                    <Form.Label>Price:</Form.Label>
-                    <Form.Control type='number' name='price' onChange={handleInputChange}></Form.Control>
-                </Form.Group>
-                <Form.Group className='mb-3'>
-                    <Form.Label>Category:</Form.Label>
-                    <Form.Control type='text' name='category' onChange={handleInputChange}></Form.Control>
-                </Form.Group>
-                <Form.Group className='mb-3'>
-                    <Form.Label>Quantity:</Form.Label>
-                    <Form.Control type='number' name='quantity' onChange={handleInputChange}></Form.Control>
-                </Form.Group>
-                <Form.Group className='mb-3'>
-                    <Form.Label>Tags:</Form.Label>
-                    <Form.Control type='text' name='tags' onChange={handleInputChange}></Form.Control>
-                </Form.Group>
-            </Form>
+            <Table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Tags</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {
+                    items.map((item, i) => {
+                        return <tr key={i}>
+                            <td>item.id</td>
+                            <td>{item.name}</td>
+                            <td>{item.description}</td>
+                            <td>${item.price.$numberDecimal}</td>
+                            <td>{item.category}</td>
+                            <td>item.tags</td>
+                            <td><Button onClick={() => { handleEditItem(item) }}>Edit</Button></td>
+                        </tr>
+                    })
+                }
+                </tbody>
+            </Table>
         </Container>
+        <Modal show={showEditModal} onHide={() => { setShowEditModal(false) }}>
+                <Modal.Dialog className='m-0'>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Edit Inventory</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    {
+                        currentEditItem ? 
+                            <Form>
+                                <Form.Group>
+                                    <Form.Label>Name:</Form.Label>
+                                    <Form.Control type='text' value={currentEditItem.name}></Form.Control>
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Description:</Form.Label>
+                                    <Form.Control type='text' value={currentEditItem.description}></Form.Control>
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Price ($):</Form.Label>
+                                    <Form.Control type='number' value={currentEditItem.price.$numberDecimal}></Form.Control>
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Category:</Form.Label>
+                                    <Form.Control type='text' value={currentEditItem.category}></Form.Control>
+                                </Form.Group>
+                            </Form> : <></>
+                    }
+
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={() => { setShowEditModal(false) }}>Close</Button>
+                        <Button onClick={() => { handleEditCurrentItem(currentEditItem) }}>Submit</Button>
+                    </Modal.Footer>
+                </Modal.Dialog>
+            </Modal>
+        </>
     )
 }
 
